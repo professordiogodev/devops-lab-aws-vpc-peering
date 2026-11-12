@@ -2,9 +2,17 @@
 
 ## The situation
 
-Clippy's staging environment lives in its own VPC. The analytics team lives in another VPC, built by a different person for a different purpose. They have a deadline: the analytics server must call a staging service **privately**, over AWS's network, not over the internet. Nobody wants to expose staging to the world just so another team can read from it.
+```text
+#staging-platform                                        Thursday
+Analytics   : our server must call the staging service. Privately.
+              Not over the internet. Deadline is Monday.
+Platform    : we are not putting staging on the internet for you.
+Security    : agreed. Private only.
+Analytics   : so... VPC peering? Peering is easy, right?
+Platform    : it looks easy, and it fails silently when one piece is missing.
+```
 
-AWS has a tool for exactly this: **VPC peering**. It looks simple (a connection, a couple of routes) and it is famous for failing silently when you forget one of the pieces. You will build it, break it halfway and watch the failure, and complete it.
+Two networks built by different people for different purposes, and a connection that has to be both private and correct. You will look at the two networks that cannot talk, build the peering halfway and watch it fail, then complete it. The ticket closes when the analytics server reaches the staging service over AWS's own network.
 
 > **Your mission**
 > - Look at two networks that cannot talk to each other
